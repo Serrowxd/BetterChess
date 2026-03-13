@@ -1,0 +1,5 @@
+berserk>=0.14.0
+python-chess>=1.999
+google-genai>=1.0.0
+python-dotenv>=1.0.0
+colorama>=0.4.6
