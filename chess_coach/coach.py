@@ -25,7 +25,7 @@ def _gemini_chat(messages: list[dict[str, str]]) -> str:
     if not api_key:
         return "Set GEMINI_API_KEY (or GOOGLE_API_KEY) in the environment."
     client = genai.Client(api_key=api_key)
-    model_name = os.environ.get("GEMINI_MODEL", "gemini-3.0-flash")
+    model_name = os.environ.get("GEMINI_MODEL", "gemini-3-flash-preview")
     # Build conversation history as Content objects (user / model roles; skip system)
     contents = []
     for m in messages:
