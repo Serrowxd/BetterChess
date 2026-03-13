@@ -4,12 +4,9 @@ from __future__ import annotations
 
 import re
 import sys
-from typing import TYPE_CHECKING
-
 import colorama
 
-if TYPE_CHECKING:
-    from chess_coach.coach import Coach
+from chess_coach.coach import Coach
 
 # SAN move pattern: castling, piece moves, pawn moves, bare squares (e.g. d7, c6); optional move number prefix.
 # Lookahead (?=\W|$) so moves followed by markdown (*), punctuation, or end of string are highlighted.

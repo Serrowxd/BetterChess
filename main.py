@@ -1,5 +1,6 @@
 """Entry point for the Terminal Chess Coach."""
 
+import logging
 import os
 import sys
 
@@ -16,6 +17,10 @@ def main() -> None:
     except ImportError:
         pass
 
+    # Default WARNING so third-party INFO (e.g. google_genai, httpx) doesn't clutter the terminal.
+    log_level = os.environ.get("LOG_LEVEL", "WARNING").upper()
+    logging.basicConfig(level=getattr(logging, log_level, logging.WARNING))
+
     token = os.environ.get("LICHESS_API_TOKEN")
     if not token:
         print("Set LICHESS_API_TOKEN in the environment or .env", file=sys.stderr)
@@ -27,8 +32,8 @@ def main() -> None:
     evaluator = ChessAPIEvaluator(url=CHESS_API_URL, depth=depth)
     coach = Coach()
 
-    def on_move(_board, fen: str, evaluation: str) -> None:
-        coach.inject_board_update(fen, evaluation)
+    def on_move(_board, fen: str, evaluation: str, player_color: str) -> None:
+        coach.inject_board_update(fen, evaluation, player_color)
 
     watcher = LichessWatcher(client, evaluator, on_move, daemon=True)
     watcher.start()

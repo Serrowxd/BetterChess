@@ -1,9 +1,29 @@
 """Position evaluators: local Stockfish or Chess API (chess-api.com)."""
 
+from __future__ import annotations
+
+import logging
+
 import chess
 import chess.engine
+from typing import Protocol
 
 CHESS_API_URL = "https://chess-api.com/v1"
+logger = logging.getLogger(__name__)
+
+
+class Evaluator(Protocol):
+    """Protocol for position evaluators (e.g. StockfishEvaluator, ChessAPIEvaluator)."""
+
+    def evaluate(
+        self,
+        board: chess.Board,
+        limit: chess.engine.Limit | None = None,
+    ) -> str:
+        ...
+
+    def quit(self) -> None:
+        ...
 
 
 class StockfishEvaluator:
@@ -92,6 +112,7 @@ class ChessAPIEvaluator:
             with urllib.request.urlopen(req, timeout=self._timeout) as resp:
                 data = json.loads(resp.read().decode("utf-8"))
         except Exception as e:
+            logger.exception("Chess API request failed")
             return f"Chess API error: {e!r}"
 
         mate = data.get("mate")
